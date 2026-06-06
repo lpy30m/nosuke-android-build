@@ -219,7 +219,7 @@ namespace Frida {
 		private Cancellable io_cancellable = new Cancellable ();
 
 		private const double MIN_SERVER_CHECK_INTERVAL = 5.0;
-		private const string GADGET_APP_ID = "re.frida.Gadget";
+		private const string GADGET_APP_ID = "com.nosuke.Gadget";
 		private const string DEBUGSERVER_ENDPOINT_17PLUS = "com.apple.internal.dt.remote.debugproxy";
 		private const string DEBUGSERVER_ENDPOINT_14PLUS = "com.apple.debugserver.DVTSecureSocketProxy";
 		private const string DEBUGSERVER_ENDPOINT_LEGACY = "com.apple.debugserver?tls=handshake-only";
@@ -1338,7 +1338,7 @@ namespace Frida {
 				}
 
 				if (connection.closed)
-					throw new Error.SERVER_NOT_RUNNING ("Unable to connect to remote frida-server");
+					throw new Error.SERVER_NOT_RUNNING ("Unable to connect to remote nosuke-server");
 
 				var server = new RemoteServer (flavor, session, connection, channel, device, transport_broker);
 				attach_remote_server (server);
@@ -1361,9 +1361,9 @@ namespace Frida {
 					if (e is Error) {
 						api_error = e;
 					} else if (connection != null) {
-						api_error = new Error.PROTOCOL ("Incompatible frida-server version");
+						api_error = new Error.PROTOCOL ("Incompatible nosuke-server version");
 					} else {
-						api_error = new Error.SERVER_NOT_RUNNING ("Unable to connect to remote frida-server: %s",
+						api_error = new Error.SERVER_NOT_RUNNING ("Unable to connect to remote nosuke-server: %s",
 							e.message);
 					}
 

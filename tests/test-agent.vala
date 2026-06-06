@@ -437,12 +437,12 @@ Interceptor.attach(Process.getModuleByName('libsystem_kernel.dylib').getExportBy
 #endif
 #if IOS || TVOS || ANDROID || QNX
 			var deployment_dir = Path.get_dirname (Frida.Test.Process.current.filename);
-			agent_filename = Path.build_filename (deployment_dir, "frida-agent." + shlib_extension);
+			agent_filename = Path.build_filename (deployment_dir, "nosuke-agent." + shlib_extension);
 #else
 			var frida_root_dir = Path.get_dirname (Path.get_dirname (Frida.Test.Process.current.filename));
-			agent_filename = Path.build_filename (frida_root_dir, "lib", "frida", "frida-agent." + shlib_extension);
+			agent_filename = Path.build_filename (frida_root_dir, "lib", "frida", "nosuke-agent." + shlib_extension);
 			if (!FileUtils.test (agent_filename, FileTest.EXISTS))
-				agent_filename = Path.build_filename (frida_root_dir, "lib", "agent", "frida-agent." + shlib_extension);
+				agent_filename = Path.build_filename (frida_root_dir, "lib", "agent", "nosuke-agent." + shlib_extension);
 #endif
 
 			try {
@@ -452,7 +452,7 @@ Interceptor.attach(Process.getModuleByName('libsystem_kernel.dylib').getExportBy
 			}
 
 			void * main_func_symbol;
-			var main_func_found = module.symbol ("frida_agent_main", out main_func_symbol);
+			var main_func_found = module.symbol ("nosuke_agent_main", out main_func_symbol);
 			assert_true (main_func_found);
 			main_impl = (AgentMainFunc) main_func_symbol;
 

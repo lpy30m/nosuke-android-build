@@ -3671,7 +3671,7 @@ namespace Frida.HostSessionTest {
 			try {
 				Cancellable? cancellable = null;
 
-				stdout.printf ("connecting to frida-server\n");
+				stdout.printf ("connecting to nosuke-server\n");
 				var host_session = yield prov.create (new NullHostSessionHub (), null, cancellable);
 				stdout.printf ("enumerating processes\n");
 				var processes = yield host_session.enumerate_processes (make_parameters_dict (), cancellable);

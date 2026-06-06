@@ -139,11 +139,11 @@ pub unsafe extern "C" fn _start(config_data: *const u8, config_size: usize) {
     unsafe {
         CONFIG_DATA = core::slice::from_raw_parts(config_data, config_size);
 
-        xnu::kernel_thread_start(frida_agent_worker, 12345usize as *mut core::ffi::c_void);
+        xnu::kernel_thread_start(nosuke_agent_worker, 12345usize as *mut core::ffi::c_void);
     }
 }
 
-unsafe extern "C" fn frida_agent_worker(_parameter: *mut core::ffi::c_void, _wait_result: i32) {
+unsafe extern "C" fn nosuke_agent_worker(_parameter: *mut core::ffi::c_void, _wait_result: i32) {
     unsafe {
         bindings::g_set_panic_handler(Some(frida_panic_handler), ptr::null_mut());
         bindings::gum_init_embedded();

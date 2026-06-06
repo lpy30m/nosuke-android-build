@@ -220,8 +220,8 @@ else
   shlib_suffix = '.so'
 endif
 
-helper_name = 'frida-helper' + exe_suffix
-agent_name = 'frida-agent' + shlib_suffix
+helper_name = 'nosuke-helper' + exe_suffix
+agent_name = 'nosuke-agent' + shlib_suffix
 gadget_name = 'frida-gadget' + shlib_suffix
 
 frida_libdir_name = f'frida-@api_version@'
@@ -601,8 +601,8 @@ build_gadget = get_option('gadget') \
     .allowed()
 
 build_server = get_option('server') \
-    .disable_if(not have_local_backend, error_message: 'frida-server requires the local backend to be included') \
-    .disable_if(host_os == 'watchos', error_message: 'frida-server not yet supported on watchOS') \
+    .disable_if(not have_local_backend, error_message: 'nosuke-server requires the local backend to be included') \
+    .disable_if(host_os == 'watchos', error_message: 'nosuke-server not yet supported on watchOS') \
     .disable_auto_if(meson.is_subproject()) \
     .allowed()
 

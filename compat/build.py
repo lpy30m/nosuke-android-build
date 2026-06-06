@@ -238,14 +238,14 @@ def setup(role: Role,
                 if "helper" in components:
                     outputs[group] += [
                         Output(identifier=f"helper_{kind}",
-                               name=f"frida-helper-{other_arch}",
+                               name=f"nosuke-helper-{other_arch}",
                                file=HELPER_FILE_UNIX,
                                target=HELPER_TARGET),
                     ]
                 if "agent" in components:
                     outputs[group] += [
                         Output(identifier=f"agent_{kind}",
-                               name=f"frida-agent-{other_arch}.dylib",
+                               name=f"nosuke-agent-{other_arch}.dylib",
                                file=AGENT_FILE_DARWIN,
                                target=AGENT_TARGET),
                     ]
@@ -259,7 +259,7 @@ def setup(role: Role,
                 if "server" in components and assets == "installed":
                     outputs[group] += [
                         Output(identifier=f"server_{kind}",
-                               name=f"frida-server-{other_arch}",
+                               name=f"nosuke-server-{other_arch}",
                                file=SERVER_FILE_UNIX,
                                target=SERVER_TARGET),
                     ]
@@ -346,14 +346,14 @@ def setup(role: Role,
             if host_os == "android" and host_arch in {"x86_64", "x86"} and "agent" in components:
                 outputs[OutputGroup("arm")] = [
                     Output(identifier="agent_emulated_legacy",
-                           name="frida-agent-arm.so",
+                           name="nosuke-agent-arm.so",
                            file=AGENT_FILE_ELF,
                            target=AGENT_TARGET),
                 ]
                 if host_arch == "x86_64":
                     outputs[OutputGroup("arm64")] = [
                         Output(identifier="agent_emulated_modern",
-                               name="frida-agent-arm64.so",
+                               name="nosuke-agent-arm64.so",
                                file=AGENT_FILE_ELF,
                                target=AGENT_TARGET),
                     ]
@@ -801,22 +801,22 @@ OVERRIDDEN_COMPAT_OPTIONS = {
     "agent_emulated_legacy",
 }
 
-HELPER_TARGET = "frida-helper"
-HELPER_FILE_WINDOWS = Path("src") / "frida-helper.exe"
-HELPER_FILE_UNIX = Path("src") / "frida-helper"
+HELPER_TARGET = "nosuke-helper"
+HELPER_FILE_WINDOWS = Path("src") / "nosuke-helper.exe"
+HELPER_FILE_UNIX = Path("src") / "nosuke-helper"
 
-AGENT_TARGET = "frida-agent"
-AGENT_FILE_WINDOWS = Path("lib") / "agent" / "frida-agent.dll"
-AGENT_FILE_DARWIN = Path("lib") / "agent" / "frida-agent.dylib"
-AGENT_FILE_ELF = Path("lib") / "agent" / "frida-agent.so"
+AGENT_TARGET = "nosuke-agent"
+AGENT_FILE_WINDOWS = Path("lib") / "agent" / "nosuke-agent.dll"
+AGENT_FILE_DARWIN = Path("lib") / "agent" / "nosuke-agent.dylib"
+AGENT_FILE_ELF = Path("lib") / "agent" / "nosuke-agent.so"
 
 GADGET_TARGET = "frida-gadget"
 GADGET_FILE_WINDOWS = Path("lib") / "gadget" / "frida-gadget.dll"
 GADGET_FILE_DARWIN = Path("lib") / "gadget" / "frida-gadget.dylib"
 GADGET_FILE_ELF = Path("lib") / "gadget" / "frida-gadget.so"
 
-SERVER_TARGET = "frida-server"
-SERVER_FILE_UNIX = Path("server") / "frida-server"
+SERVER_TARGET = "nosuke-server"
+SERVER_FILE_UNIX = Path("server") / "nosuke-server"
 
 MSVS_ENVVARS = {
     "PLATFORM",

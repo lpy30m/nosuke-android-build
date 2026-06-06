@@ -1,7 +1,7 @@
 #ifndef __FRIDA_HELPER_SERVICE_GLUE_H__
 #define __FRIDA_HELPER_SERVICE_GLUE_H__
 
-#include "frida-helper-backend.h"
+#include "nosuke-helper-backend.h"
 
 G_BEGIN_DECLS
 

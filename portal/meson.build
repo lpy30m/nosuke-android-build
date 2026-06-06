@@ -17,7 +17,7 @@ raw_portal = executable('frida-portal-raw', portal_sources,
 custom_target('frida-portal',
   input: [raw_portal, 'frida-portal.xcent'],
   output: 'frida-portal' + exe_suffix,
-  command: post_process + ['executable', 're.frida.Portal', '@INPUT1@'],
+  command: post_process + ['executable', 'com.nosuke.Portal', '@INPUT1@'],
   install: true,
   install_dir: get_option('bindir'),
 )

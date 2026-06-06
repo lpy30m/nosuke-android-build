@@ -86,7 +86,7 @@ raw_runner = executable('frida-tests-raw', 'main.vala',
 runner = custom_target('frida-tests',
   input: [raw_runner, 'frida-tests.xcent'],
   output: 'frida-tests' + exe_suffix,
-  command: post_process + ['executable', 're.frida.CoreTests', '@INPUT1@'],
+  command: post_process + ['executable', 'com.nosuke.CoreTests', '@INPUT1@'],
   build_by_default: true,
 )
 

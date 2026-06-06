@@ -64,7 +64,7 @@ if host_os == 'android' or have_droidy_backend
 endif
 
 if have_local_backend
-  post_process_helper = post_process + ['executable', 're.frida.Helper']
+  post_process_helper = post_process + ['executable', 'com.nosuke.Helper']
 
   embed_helper = [
     python,
@@ -109,7 +109,7 @@ if have_local_backend
       base_vala_args,
       '--pkg=frida-gum-windows-1.0',
     ]
-    helper_backend = static_library('frida-helper-backend', helper_backend_sources,
+    helper_backend = static_library('nosuke-helper-backend', helper_backend_sources,
       vala_args: helper_backend_vala_args,
       c_args: frida_component_cflags,
       dependencies: [gio_dep, gee_dep, gum_dep, base_dep],
@@ -120,13 +120,13 @@ if have_local_backend
       'windows' / 'frida-helper-service.vala',
       'windows' / 'frida-helper-service-glue.c',
     ]
-    raw_helper = executable('frida-helper-raw', helper_sources,
+    raw_helper = executable('nosuke-helper-raw', helper_sources,
       vala_args: helper_backend_vala_args,
       link_with: helper_backend,
       dependencies: [gio_dep, gee_dep, gum_dep, base_dep, pipe_dep],
     )
 
-    helper = custom_target('frida-helper',
+    helper = custom_target('nosuke-helper',
       input: raw_helper,
       output: helper_name,
       command: post_process_helper,
@@ -238,7 +238,7 @@ if have_local_backend
       ]
     endif
     helper_backend_vala_args = base_vala_args
-    helper_backend = static_library('frida-helper-backend', helper_backend_sources,
+    helper_backend = static_library('nosuke-helper-backend', helper_backend_sources,
       c_args: frida_component_cflags,
       vala_args: [
         helper_backend_vala_args,
@@ -256,15 +256,15 @@ if have_local_backend
       'darwin' / 'frida-helper-service.vala',
       'darwin' / 'frida-helper-service-glue.m',
     ]
-    helper_symlist = 'darwin' / 'frida-helper.symbols'
+    helper_symlist = 'darwin' / 'nosuke-helper.symbols'
     helper_link_args = ['-Wl,-exported_symbols_list,' + meson.current_source_dir() / helper_symlist]
     helper_link_depends = [helper_symlist]
     if host_os == 'macos'
-      helper_plist = 'darwin' / 'frida-helper.plist'
+      helper_plist = 'darwin' / 'nosuke-helper.plist'
       helper_link_args += ['-Wl,-sectcreate,__TEXT,__info_plist,' + meson.current_source_dir() / helper_plist]
       helper_link_depends += [helper_plist]
     endif
-    raw_helper = executable('frida-helper-raw', helper_sources,
+    raw_helper = executable('nosuke-helper-raw', helper_sources,
       vala_args: [helper_backend_vala_args, '--pkg=posix'],
       link_args: [helper_link_args, backend_libs_private],
       link_depends: helper_link_depends,
@@ -275,10 +275,10 @@ if have_local_backend
 
     need_universal_helper = assets_mode == 'installed' and helper_compat != ''
 
-    helper = custom_target('frida-helper',
+    helper = custom_target('nosuke-helper',
       input: [
         raw_helper,
-        'darwin' / 'frida-helper.xcent',
+        'darwin' / 'nosuke-helper.xcent',
       ],
       output: need_universal_helper ? f'@helper_name@-@host_abi@' : helper_name,
       command: post_process_helper + '@INPUT1@',
@@ -288,7 +288,7 @@ if have_local_backend
     )
 
     if need_universal_helper
-      custom_target('frida-helper-universal',
+      custom_target('nosuke-helper-universal',
         input: helper,
         output: helper_name,
         command: [
@@ -416,7 +416,7 @@ if have_local_backend
       gum_vala_args,
       '--pkg=posix',
     ]
-    helper_backend = static_library('frida-helper-backend', helper_backend_sources,
+    helper_backend = static_library('nosuke-helper-backend', helper_backend_sources,
       c_args: frida_component_cflags,
       vala_args: [
         helper_backend_vala_args,
@@ -432,10 +432,10 @@ if have_local_backend
     helper_sources = [
       'linux' / 'frida-helper-service.vala',
     ]
-    helper_symscript = 'linux' / 'frida-helper.version'
+    helper_symscript = 'linux' / 'nosuke-helper.version'
     helper_link_args = ['-Wl,--version-script,' + meson.current_source_dir() / helper_symscript]
     helper_link_depends = [helper_symscript]
-    raw_helper = executable('frida-helper-raw', helper_sources,
+    raw_helper = executable('nosuke-helper-raw', helper_sources,
       vala_args: helper_backend_vala_args,
       link_args: helper_link_args,
       link_depends: helper_link_depends,
@@ -443,7 +443,7 @@ if have_local_backend
       dependencies: [gio_dep, gio_unix_dep, gee_dep, gum_dep, base_dep],
     )
 
-    helper = custom_target('frida-helper',
+    helper = custom_target('nosuke-helper',
       input: raw_helper,
       output: helper_name,
       command: post_process_helper,

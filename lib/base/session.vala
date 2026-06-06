@@ -1100,7 +1100,7 @@ namespace Frida {
 			throw (IOError) e;
 
 		if (e is DBusError.UNKNOWN_METHOD) {
-			throw new Frida.Error.PROTOCOL ("Unable to communicate with remote frida-server; " +
+			throw new Frida.Error.PROTOCOL ("Unable to communicate with remote nosuke-server; " +
 				"please ensure that major versions match and that the remote Frida has the " +
 				"feature you are trying to use");
 		}

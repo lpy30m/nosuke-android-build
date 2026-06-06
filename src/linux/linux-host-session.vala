@@ -60,16 +60,16 @@ namespace Frida {
 			injector.uninjected.connect (on_uninjected);
 
 #if HAVE_EMBEDDED_ASSETS
-			var blob32 = Frida.Data.Agent.get_frida_agent_32_so_blob ();
-			var blob64 = Frida.Data.Agent.get_frida_agent_64_so_blob ();
-			var emulated_arm = Frida.Data.Agent.get_frida_agent_arm_so_blob ();
-			var emulated_arm64 = Frida.Data.Agent.get_frida_agent_arm64_so_blob ();
-			agent = new AgentDescriptor (PathTemplate ("frida-agent-<arch>.so"),
+			var blob32 = Frida.Data.Agent.get_nosuke_agent_32_so_blob ();
+			var blob64 = Frida.Data.Agent.get_nosuke_agent_64_so_blob ();
+			var emulated_arm = Frida.Data.Agent.get_nosuke_agent_arm_so_blob ();
+			var emulated_arm64 = Frida.Data.Agent.get_nosuke_agent_arm64_so_blob ();
+			agent = new AgentDescriptor (PathTemplate ("nosuke-agent-<arch>.so"),
 				new Bytes.static (blob32.data),
 				new Bytes.static (blob64.data),
 				new AgentResource[] {
-					new AgentResource ("frida-agent-arm.so", new Bytes.static (emulated_arm.data), tempdir),
-					new AgentResource ("frida-agent-arm64.so", new Bytes.static (emulated_arm64.data), tempdir),
+					new AgentResource ("nosuke-agent-arm.so", new Bytes.static (emulated_arm.data), tempdir),
+					new AgentResource ("nosuke-agent-arm64.so", new Bytes.static (emulated_arm64.data), tempdir),
 				},
 				AgentMode.INSTANCED,
 				tempdir);
@@ -387,7 +387,7 @@ namespace Frida {
 		protected override async Future<IOStream> perform_attach_to (uint pid, HashTable<string, Variant> options,
 				Cancellable? cancellable, out Object? transport) throws Error, IOError {
 			uint id;
-			string entrypoint = "frida_agent_main";
+			string entrypoint = "nosuke_agent_main";
 			string parameters = make_agent_parameters (pid, "", options);
 			AgentFeatures features = CONTROL_CHANNEL;
 			var linjector = (Linjector) injector;
@@ -412,10 +412,10 @@ namespace Frida {
 			unowned string name;
 			switch (cpu_type_from_pid (pid)) {
 				case Gum.CpuType.IA32:
-					name = "frida-agent-arm.so";
+					name = "nosuke-agent-arm.so";
 					break;
 				case Gum.CpuType.AMD64:
-					name = "frida-agent-arm64.so";
+					name = "nosuke-agent-arm64.so";
 					break;
 				default:
 					throw new Error.NOT_SUPPORTED ("Emulated realm is not supported on this architecture");
@@ -462,7 +462,7 @@ namespace Frida {
 
 			try {
 				string instance_id = Uuid.string_random ().replace ("-", "");
-				string helper_path = "/data/local/tmp/frida-helper-" + instance_id + ".dex";
+				string helper_path = "/data/local/tmp/nosuke-helper-" + instance_id + ".dex";
 				FileUtils.set_data (helper_path, Frida.Data.Android.get_helper_dex_blob ().data);
 				Posix.chmod (helper_path, 0644);
 

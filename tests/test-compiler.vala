@@ -59,7 +59,7 @@ export function log(...items: any[]) {
 					test_log.printf ("build-time,%u\n", elapsed_msec);
 
 					Gum.Process.enumerate_modules (m => {
-						if ("frida-agent" in m.path) {
+						if ("nosuke-agent" in m.path) {
 							var r = m.range;
 							test_log.printf (("agent-range,0x%" + uint64.FORMAT_MODIFIER + "x,0x%" +
 									uint64.FORMAT_MODIFIER + "x\n"),
@@ -129,7 +129,7 @@ export function log(...items: any[]) {
 					test_log.printf ("build-time,%u\n", elapsed_msec);
 
 					Gum.Process.enumerate_modules (m => {
-						if ("frida-agent" in m.path) {
+						if ("nosuke-agent" in m.path) {
 							var r = m.range;
 							test_log.printf (("agent-range,0x%" + uint64.FORMAT_MODIFIER + "x,0x%" +
 									uint64.FORMAT_MODIFIER + "x\n"),
