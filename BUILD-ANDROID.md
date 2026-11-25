@@ -124,5 +124,12 @@ runner 上安装 NDK r29 并交叉编译。不需要在本机安装编译工具�
 账单页面为准。Codespaces 和云服务器也可编译；若只是生成二进制，Actions
 通常更方便。
 
-此配置已做静态校验，尚未在 GitHub runner 上实际完成编译；源码修改与
-依赖的兼容性仍需实际构建及 Android 设备验证。
+已在 GitHub Actions 的 Ubuntu 24.04 runner 上完成 Android arm64 构建，
+包含 ARM 32 位进程兼容组件，NDK 为 r29。构建记录：
+https://github.com/lpy30m/nosuke-android-build/actions/runs/45563441610
+
+产物对应源码提交 `106e14c102bb9e54dcb8837b5e652f2f9efa31ad`。构建前将
+`subprojects/frida-gum.wrap` 对齐到上游同一时期的修复提交
+`81ca64bca5a41f5d3f1e4647a4579eee4ee3bd8e`，解决 Core 已使用新版 Gum
+接口、依赖却仍锁定 17.9.11 的不一致。工作流通过 actionlint 校验。
+尚未在实际 Android 设备上验证注入和 Gadget 加载。
