@@ -251,11 +251,11 @@ namespace Frida {
 
 			var winjector = injector as Winjector;
 #if HAVE_EMBEDDED_ASSETS
-			var id = yield winjector.inject_library_resource (pid, agent, "nosuke_agent_main",
+			var id = yield winjector.inject_library_resource (pid, agent, "main",
 				make_agent_parameters (pid, t.remote_address, options), cancellable);
 #else
 			var id = yield winjector.inject_library_file_with_template (pid,
-				installed_agent_path_template (), "nosuke_agent_main",
+				installed_agent_path_template (), "main",
 				make_agent_parameters (pid, t.remote_address, options),
 				installed_agent_dependencies (), cancellable);
 #endif

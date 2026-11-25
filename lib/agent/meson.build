@@ -36,7 +36,7 @@ if build_agent
       extra_link_depends += symfile
     endif
   elif host_os_family == 'darwin'
-    extra_link_args += '-Wl,-exported_symbol,_nosuke_agent_main'
+    extra_link_args += '-Wl,-exported_symbol,_main'
   else
     if libc == 'glibc'
       symscript = 'nosuke-agent-glibc.version'

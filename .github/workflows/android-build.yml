@@ -1,0 +1,116 @@
+name: Build Android Server and Gadget
+
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: Android architecture
+        type: choice
+        default: arm64
+        options:
+          - arm64
+          - arm
+      compat:
+        description: Include 32-bit process support when building arm64
+        type: choice
+        default: native
+        options:
+          - native
+          - disabled
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+    env:
+      BUILD_ARCH: ${{ inputs.arch }}
+      BUILD_COMPAT: ${{ inputs.compat }}
+    steps:
+      - name: Check out source and build tools
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install build utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config ninja-build unzip xz-utils
+          echo "FRIDA_DEPS=$RUNNER_TEMP/nosuke-frida-deps" >> "$GITHUB_ENV"
+
+      - name: Install Android NDK r29
+        uses: nttld/setup-ndk@v1
+        id: ndk
+        with:
+          ndk-version: r29
+
+      - name: Configure Android build
+        env:
+          ANDROID_NDK_ROOT: ${{ steps.ndk.outputs.ndk-path }}
+        run: |
+          bash ./configure --host="android-$BUILD_ARCH" \
+            --enable-server --enable-gadget \
+            --disable-portal --disable-inject --disable-tests \
+            --disable-compiler-backend \
+            --with-compat="$BUILD_COMPAT" 2>&1 | tee configure.log
+
+      - name: Compile
+        env:
+          ANDROID_NDK_ROOT: ${{ steps.ndk.outputs.ndk-path }}
+        run: make 2>&1 | tee build.log
+
+      - name: Package binaries
+        env:
+          ANDROID_NDK_ROOT: ${{ steps.ndk.outputs.ndk-path }}
+        run: |
+          test -f build/server/nosuke-server
+          test -f build/lib/gadget/frida-gadget.so
+          mkdir -p artifacts
+          cp build/server/nosuke-server build/lib/gadget/frida-gadget.so artifacts/
+          {
+            echo "target=android-$BUILD_ARCH"
+            echo "compat=$BUILD_COMPAT"
+            echo "compiler_backend=disabled"
+            echo "commit=$(git rev-parse HEAD)"
+            echo "version=$(python3 tools/detect-version.py)"
+            cat "$ANDROID_NDK_ROOT/source.properties"
+          } > artifacts/BUILD-INFO.txt
+          tar -C artifacts -czf "nosuke-android-$BUILD_ARCH.tar.gz" \
+            nosuke-server frida-gadget.so BUILD-INFO.txt
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: nosuke-android-${{ inputs.arch }}
+          path: nosuke-android-${{ inputs.arch }}.tar.gz
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-android-${{ inputs.arch }}
+          path: |
+            configure.log
+            build.log
+            build/**/meson-logs/meson-log.txt
+          if-no-files-found: warn
+          retention-days: 14
